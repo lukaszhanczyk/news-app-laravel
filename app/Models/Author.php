@@ -13,8 +13,8 @@ class Author extends Model
         'name',
     ];
 
-    public function posts()
+    public function articles()
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Article::class)->withTimestamps();
     }
 }

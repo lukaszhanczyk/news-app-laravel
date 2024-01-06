@@ -14,7 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->group(function (){
+    Route::apiResource('/users', \App\Http\Controllers\Api\UserController::class);
+    Route::get('/articles', [\App\Http\Controllers\Api\ArticleController::class, 'index']);
+    Route::get('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+})->get('/user', function (Request $request) {
     return $request->user();
 });
 
