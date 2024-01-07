@@ -5,9 +5,6 @@ namespace App\Http\Services\Updaters;
 use App\Http\Services\Clients\NewsApiClient;
 use App\Models\ApiSource;
 use App\Models\Article;
-use App\Models\Author;
-use App\Models\Category;
-use App\Models\Source;
 
 class NewsApiUpdater extends Updater
 {
@@ -26,7 +23,7 @@ class NewsApiUpdater extends Updater
 
 
         if ($articles['articles']){
-            Article::query()->delete();
+
             foreach ($articles['articles'] as $article){
                 $date = new \DateTime($article['publishedAt']);
 
@@ -93,49 +90,4 @@ class NewsApiUpdater extends Updater
     {
         return ApiSource::where('name', '=', 'NewsApi')->first();
     }
-
-    private function getFirstCategory()
-    {
-        return Category::query()->first();
-    }
-
-    private function updateCategories($name)
-    {
-        $category = Category::where('name', '=', $name)->first();
-
-        if ($category){
-            return $category;
-        }
-
-        return Category::create([
-            'name' => $name,
-        ]);
-    }
-
-    private function updateAuthors($name)
-    {
-        $author = Author::where('name', '=', $name)->first();
-
-        if ($author){
-            return $author;
-        }
-
-        return Author::create([
-            'name' => $name,
-        ]);
-    }
-
-    private function updateSources($name)
-    {
-        $source = Source::where('name', '=', $name)->first();
-
-        if ($source){
-            return $source;
-        }
-
-        return Source::create([
-            'name' => $name,
-        ]);
-    }
-
 }

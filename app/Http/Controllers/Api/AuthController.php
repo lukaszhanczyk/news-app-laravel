@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,11 +17,11 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::create([
+        $user = new UserResource(User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password'])
-        ]);
+        ]));
 
         $token = $user->createToken('main')->plainTextToken;
 
@@ -38,7 +39,7 @@ class AuthController extends Controller
         }
 
         /* @var User $user*/
-        $user = Auth::user();
+        $user = new UserResource(Auth::user());
         $token = $user->createToken('main')->plainTextToken;
 
         return response(compact('user', 'token'));

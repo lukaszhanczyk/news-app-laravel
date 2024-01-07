@@ -3,17 +3,27 @@
 namespace App\Console\Commands;
 
 use App\Http\Services\Clients\NewsApiClient;
+use App\Http\Services\Updaters\GuardianApiUpdater;
 use App\Http\Services\Updaters\NewsApiUpdater;
+use App\Http\Services\Updaters\NYTApiUpdater;
+use App\Models\Article;
 use Illuminate\Console\Command;
 
 class UpdateNewsCommand extends Command
 {
     private NewsApiUpdater $newsApiUpdater;
+    private GuardianApiUpdater $guardianApiUpdater;
+    private NYTApiUpdater $NYTApiUpdater;
 
-    public function __construct(NewsApiUpdater $newsApiUpdater)
-    {
+    public function __construct(
+        NewsApiUpdater $newsApiUpdater,
+        GuardianApiUpdater $guardianApiUpdater,
+        NYTApiUpdater $NYTApiUpdater
+    ){
         parent::__construct();
         $this->newsApiUpdater = $newsApiUpdater;
+        $this->guardianApiUpdater = $guardianApiUpdater;
+        $this->NYTApiUpdater = $NYTApiUpdater;
     }
 
     /**
@@ -35,6 +45,9 @@ class UpdateNewsCommand extends Command
      */
     public function handle()
     {
-        $this->newsApiUpdater->update();
+        Article::query()->delete();
+//        $this->newsApiUpdater->update();
+//        $this->guardianApiUpdater->update();
+        $this->NYTApiUpdater->update();
     }
 }

@@ -13,8 +13,15 @@ class Source extends Model
         'name',
     ];
 
+    protected $hidden = ['pivot'];
+
     public function articles()
     {
         return $this->hasMany(Article::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }

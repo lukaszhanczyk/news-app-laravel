@@ -7,14 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class ApiSource extends Model
 {
-    use HasFactory, HasFactory;
+    use HasFactory;
 
     protected $fillable = [
         'name',
     ];
 
+    protected $hidden = ['pivot'];
+
     public function articles()
     {
         return $this->hasMany(Article::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

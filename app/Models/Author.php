@@ -13,8 +13,15 @@ class Author extends Model
         'name',
     ];
 
+    protected $hidden = ['pivot'];
+
     public function articles()
     {
         return $this->hasMany(Article::class)->withTimestamps();
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }
