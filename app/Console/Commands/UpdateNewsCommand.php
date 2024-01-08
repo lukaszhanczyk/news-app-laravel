@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Services\Clients\NewsApiClient;
 use App\Http\Services\Updaters\GuardianApiUpdater;
 use App\Http\Services\Updaters\NewsApiUpdater;
 use App\Http\Services\Updaters\NYTApiUpdater;
 use App\Models\Article;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpdateNewsCommand extends Command
 {
@@ -46,8 +47,22 @@ class UpdateNewsCommand extends Command
     public function handle()
     {
         Article::query()->delete();
-//        $this->newsApiUpdater->update();
-//        $this->guardianApiUpdater->update();
-        $this->NYTApiUpdater->update();
+        try {
+            $this->newsApiUpdater->update();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        try {
+            $this->guardianApiUpdater->update();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        try {
+            $this->NYTApiUpdater->update();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

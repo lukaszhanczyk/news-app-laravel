@@ -16,21 +16,37 @@ class ArticleController extends Controller
         $sources = $request->query('source');
         $categories = $request->query('category');
         $authors = $request->query('author');
-
+        $search = $request->query('search');
+        $dateFrom = $request->query('dateFrom');
+        $dateTo = $request->query('dateTo');
 
         $articles = Article::query();
+
         if ($apis and count($apis) > 0){
-            $articles->orWhereIn('api_source_id', $apis);
+            $articles->whereIn('api_source_id', $apis);
         }
         if ($sources and count($sources) > 0){
-            $articles->orWhereIn('source_id', $sources);
+            $articles->whereIn('source_id', $sources);
         }
         if ($categories and count($categories) > 0){
-            $articles->orWhereIn('category_id', $categories);
+            $articles->whereIn('category_id', $categories);
         }
         if ($authors and count($authors) > 0){
-            $articles->orWhereHas('authors', function (Builder $query) use ($authors) {
+            $articles->whereHas('authors', function (Builder $query) use ($authors) {
                 $query->whereIn('authors.id', $authors);
+            });
+        }
+        if ($dateTo){
+            $articles->where('published_at', '<=', $dateTo);
+        }
+        if ($dateFrom){
+            $articles->where('published_at', '>=', $dateFrom);
+        }
+
+        if ($search){
+            $articles->where(function($query) use ($search) {
+                $query->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
             });
         }
 
